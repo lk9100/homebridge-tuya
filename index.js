@@ -22,9 +22,12 @@ const SimpleFanLightAccessory = require('./lib/SimpleFanLightAccessory');
 const SwitchAccessory = require('./lib/SwitchAccessory');
 const ValveAccessory = require('./lib/ValveAccessory');
 const OilDiffuserAccessory = require('./lib/OilDiffuserAccessory');
+const DoorbellAccessory = require('./lib/DoorbellAccessory');
+const VerticalBlindsWithTilt = require('./lib/VerticalBlindsWithTilt');
 
 const PLUGIN_NAME = 'homebridge-tuya';
 const PLATFORM_NAME = 'TuyaLan';
+const DEFAULT_DISCOVER_TIMEOUT = 60000;
 
 const CLASS_DEF = {
     outlet: OutletAccessory,
@@ -47,7 +50,9 @@ const CLASS_DEF = {
     fan: SimpleFanAccessory,
     fanlight: SimpleFanLightAccessory,
     watervalve: ValveAccessory,
-    oildiffuser: OilDiffuserAccessory
+    oildiffuser: OilDiffuserAccessory,
+    doorbell: DoorbellAccessory,
+    verticalblindswithtilt: VerticalBlindsWithTilt
 };
 
 let Characteristic, PlatformAccessory, Service, Categories, AdaptiveLightingController, UUID;
@@ -152,7 +157,7 @@ class TuyaLan {
                     this.log.warn('Failed to discover %s (%s) in time but will keep looking.', devices[deviceId].name, deviceId);
                 }
             });
-        }, 60000);
+        }, this.config.discoverTimeout ?? DEFAULT_DISCOVER_TIMEOUT);
     }
 
     registerPlatformAccessories(platformAccessories) {
